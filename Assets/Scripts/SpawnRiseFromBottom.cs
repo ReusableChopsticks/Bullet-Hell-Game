@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,40 +10,61 @@ public class SpawnRiseFromBottom : MonoBehaviour
     public System.Random rng;
     public SystemValues sysVals;
 
-    [Range(0.0f, 5.0f)]
+    radialBurst attackScript;
+
+    [Range(0.0f, 3.0f)]
     public float moveTime;
-    
+
+    float timeBeforeAttack;
+
     private Vector3 velocity = Vector3.zero;
 
     private float ranX;
     private float ranY;
-    private Vector3 targetPos;
+
+    // these need to be public to be accessed by radialBursts
+    [HideInInspector]
+    public Vector3 targetPos;
+    [HideInInspector]
+    public Vector3 initialPos;
+
 
     void Start()
     {
+        float extentsX = gameObject.GetComponent<SpriteRenderer>().bounds.extents.x;
+        float extentsY = gameObject.GetComponent<SpriteRenderer>().bounds.extents.y;
+
+        // disable attack first
+        attackScript = gameObject.GetComponent<radialBurst>();
+        attackScript.enabled = false;
+
+        // attack will always start after finishing entry animation
+        timeBeforeAttack = moveTime;
+        
         // calculate a random target point to rise up to
-        //ranX = (float)(sysVals.rng.NextDouble() * (sysVals.maxWorldCoords.x - sysVals.minWorldCoords.x) + sysVals.minWorldCoords.x);
-        //ranY = (float)(sysVals.rng.NextDouble() * (sysVals.maxWorldCoords.y - sysVals.minWorldCoords.y) + sysVals.minWorldCoords.y);
-
-        // stupid way of waiting for thing to update?
-        while (sysVals.maxWorldCoords.x == 0 || sysVals.minWorldCoords.y == 0)
-        { } // do nothing
-
-        ranX = Random.Range(sysVals.minWorldCoords.x, sysVals.maxWorldCoords.x);
-        ranY = Random.Range(sysVals.minWorldCoords.y, sysVals.maxWorldCoords.y);
+        ranX = UnityEngine.Random.Range(sysVals.minWorldCoords.x + extentsX, sysVals.maxWorldCoords.x - extentsX);
+        ranY = UnityEngine.Random.Range(sysVals.minWorldCoords.y + extentsY, sysVals.maxWorldCoords.y - extentsY);
 
         Debug.Log(string.Format("min x: {0}", sysVals.minWorldCoords.x));
         Debug.Log(string.Format("max x: {0}", sysVals.maxWorldCoords.x));
 
         //spawn it just below visible part of screen
-        gameObject.transform.position = new Vector3(ranX, sysVals.minWorldCoords.y - gameObject.GetComponent<SpriteRenderer>().bounds.size.y, sysVals.cameraZPos);
-        targetPos = new Vector3(ranX, ranY, sysVals.cameraZPos);
+        initialPos = new Vector3(ranX, sysVals.minWorldCoords.y - gameObject.GetComponent<SpriteRenderer>().bounds.size.y, transform.position.z);
+        gameObject.transform.position = initialPos;
+        targetPos = new Vector3(ranX, ranY, 0);
     }
 
     // Update is called once per frame
     void Update()
     {
-        //transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref velocity, moveTime);
+        transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref velocity, moveTime);
+        timeBeforeAttack -= Time.deltaTime;
+        
+        // after wind up time is finished, add the script for the attack
+        if (timeBeforeAttack < 0)
+        {
+            attackScript.enabled = true;
+        }
     }
 
     

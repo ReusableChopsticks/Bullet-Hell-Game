@@ -5,6 +5,9 @@ using UnityEngine;
 public class radialBurst : MonoBehaviour
 {
     public GameObject bullet;
+    
+    private SpawnRiseFromBottom spawnScript;
+
     [Range(0.0f, 10.0f)]
     public float bulletSpeed;
     [Range(0.0f, 2 * Mathf.PI)]
@@ -12,12 +15,22 @@ public class radialBurst : MonoBehaviour
     public int bulletAmount;
     public float fireInterval;
     
-    float currTime;
+    [Range(0.0f, 10.0f)]
+    public float attackDuration;
+    float currAttackTime = 0;
+
+    [Range(0.0f, 5.0f)]
+    public float exitTime = 3;
+    float currExitTime = 0;
+    
+    float currTime = 0;
+
 
     // Start is called before the first frame update
     void Start()
     {
         currTime = 0;
+        spawnScript = gameObject.GetComponent<SpawnRiseFromBottom>();
     }
 
     private void Fire()
@@ -41,13 +54,41 @@ public class radialBurst : MonoBehaviour
     void Update()
     {
         currTime += Time.deltaTime;
-        if (currTime > fireInterval)
+        currAttackTime += Time.deltaTime;
+
+        if (currTime > fireInterval & currAttackTime < attackDuration)
         {
             Fire();
             currTime = 0;
         }
 
+        if (currAttackTime > attackDuration)
+        {
+            spawnScript.enabled = false;
+            exitScreen();
+        }
+
         //transform.position += new Vector3(0, 1 * Time.deltaTime, 0);
         transform.Rotate(0, 0, rotateSpeed, Space.Self);
+    }
+
+    private void exitScreen()
+    {
+        currExitTime += Time.deltaTime;
+        if (currExitTime < exitTime) // ease flower down back to starting pos, out of view
+        {
+            //float interpolate = Mathf.Pow(2f, (1/exitTime) * currExitTime) - 1;
+            float interpolate = Mathf.Pow((1/exitTime) * currExitTime, 5);
+            transform.position = Vector3.Lerp(spawnScript.targetPos, spawnScript.initialPos, interpolate);
+            Debug.Log(interpolate);
+        } else
+        {
+            // everything is finished. suicide.
+            Destroy(gameObject);
+            
+        }
+
+
+
     }
 }

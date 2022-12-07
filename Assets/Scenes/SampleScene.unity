@@ -295,9 +295,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bullet: {fileID: 5298222912422163678, guid: d5acf26a497febd4eb74a2b4f4c17e5e, type: 3}
   bulletSpeed: 3.01
-  rotateSpeed: 3.23
+  rotateSpeed: 0.34
   bulletAmount: 10
-  fireInterval: 0.5
+  fireInterval: 0.4
+  attackDuration: 3.61
+  exitTime: 1.44
 --- !u!212 &331301790
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -358,7 +360,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 331301788}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.03, y: -3.07, z: 0}
+  m_LocalPosition: {x: 7.73, y: -2.67, z: 0}
   m_LocalScale: {x: 0.32822886, y: 0.32822886, z: 0.32822886}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -378,7 +380,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sysVals: {fileID: 11400000, guid: 2a6f1e3d871ae9945878826e8d1c2010, type: 2}
-  moveTime: 0.96
+  moveTime: 0.51
+  targetPos: {x: 0, y: 0, z: 0}
+  initialPos: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,6 +480,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82b41915a1b772648a8ba81f6320880a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  systemValues: {fileID: 11400000, guid: 2a6f1e3d871ae9945878826e8d1c2010, type: 2}
 --- !u!1 &1033435439
 GameObject:
   m_ObjectHideFlags: 0
@@ -773,8 +778,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: GAME OVER
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
